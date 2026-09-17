@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>중3 삼각비 쉽게 이해하기</title>
+<style>
+  :root{
+    --bg:#f6f8fc;
+    --card:#ffffff;
+    --text:#182033;
+    --muted:#667085;
+    --line:#e4e8f0;
+    --primary:#4f46e5;
+    --primary-soft:#eef0ff;
+    --green:#0f9d72;
+    --green-soft:#e9fbf4;
+    --orange:#e68a00;
+    --orange-soft:#fff4df;
+    --red:#d94a55;
+    --red-soft:#ffedf0;
+    --shadow:0 14px 35px rgba(35, 45, 75, .08);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.65;
+  }
+  header{
+    background:
+      radial-gradient(circle at 20% 10%, rgba(255,255,255,.20) 0 8%, transparent 9%),
+      linear-gradient(135deg,#4f46e5,#6d5dfc 55%,#7c6ef6);
+    color:#fff;
+    padding:54px 20px 46px;
+  }
+  .hero{
+    max-width:1100px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:30px;
+    align-items:center;
+  }
+  .eyebrow{
+    display:inline-block;
+    background:rgba(255,255,255,.17);
+    border:1px solid rgba(255,255,255,.28);
+    padding:5px 11px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:.9rem;
+  }
+  h1{font-size:clamp(2rem,4vw,3.45rem); line-height:1.12; margin:14px 0}
+  .hero p{font-size:1.08rem; opacity:.95; max-width:650px}
+  .hero-card{
+    background:rgba(255,255,255,.13);
+    border:1px solid rgba(255,255,255,.24);
+    border-radius:24px;
+    padding:22px;
+    backdrop-filter:blur(10px);
+  }
+  .hero-equation{
+    font-size:1.3rem;
+    background:#fff;
+    color:var(--text);
+    border-radius:18px;
+    padding:16px 18px;
+    margin-top:14px;
+    font-weight:800;
+  }
+
+  nav{
+    position:sticky; top:0; z-index:20;
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1100px; margin:auto; padding:9px 20px;
+    display:flex; gap:8px; overflow-x:auto;
+  }
+  nav a{
+    color:var(--text); text-decoration:none; white-space:nowrap;
+    padding:8px 12px; border-radius:10px; font-weight:700;
+  }
+  nav a:hover{background:var(--primary-soft); color:var(--primary)}
+
+  main{max-width:1100px; margin:auto; padding:34px 20px 70px}
+  section{scroll-margin-top:72px; margin-bottom:28px}
+  .section-title{margin:0 0 8px; font-size:1.7rem}
+  .section-desc{color:var(--muted); margin-top:0}
+
+  .grid{display:grid; gap:20px}
+  .two{grid-template-columns:1fr 1fr}
+  .three{grid-template-columns:repeat(3,1fr)}
+  .card{
+    background:var(--card); border:1px solid var(--line);
+    border-radius:22px; box-shadow:var(--shadow); padding:24px;
+  }
+  .pill{
+    display:inline-block; padding:4px 9px; border-radius:999px;
+    font-size:.8rem; font-weight:800;
+  }
+  .pill.blue{background:var(--primary-soft); color:var(--primary)}
+  .pill.green{background:var(--green-soft); color:var(--green)}
+  .pill.orange{background:var(--orange-soft); color:var(--orange)}
+  .pill.red{background:var(--red-soft); color:var(--red)}
+
+  .formula{
+    font-size:1.18rem; font-weight:800; text-align:center;
+    background:#fbfcff; border:1px dashed #cfd5e2;
+    border-radius:16px; padding:16px; margin-top:14px;
+  }
+  .formula strong{color:var(--primary)}
+  .memory{
+    margin-top:14px; border-left:5px solid var(--primary);
+    background:var(--primary-soft); padding:13px 15px; border-radius:10px;
+    font-weight:700;
+  }
+
+  .simulator{
+    display:grid; grid-template-columns:1.2fr .8fr; gap:18px; align-items:stretch
+  }
+  .svg-wrap{
+    min-height:380px; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(180deg,#fcfdff,#f5f7fb);
+    border:1px solid var(--line); border-radius:18px; overflow:hidden;
+  }
+  #triangleSvg{width:100%; height:100%; min-height:370px}
+  .controls label{display:block;font-weight:800;margin-bottom:7px}
+  input[type="range"]{width:100%; accent-color:var(--primary)}
+  .angle-bubble{
+    display:flex; align-items:end; gap:7px; margin:12px 0 20px
+  }
+  .angle-num{font-size:2.5rem; font-weight:900; line-height:1}
+  .angle-unit{font-weight:800; margin-bottom:3px; color:var(--muted)}
+  .metric{
+    border:1px solid var(--line); border-radius:16px; padding:14px; margin:10px 0;
+    display:grid; grid-template-columns:66px 1fr; gap:10px; align-items:center;
+  }
+  .metric .sym{font-size:1.25rem;font-weight:900;text-align:center;border-radius:12px;padding:8px}
+  .metric .content b{display:block;font-size:1.08rem}
+  .metric .content span{color:var(--muted);font-size:.92rem}
+  .sin .sym{background:var(--green-soft);color:var(--green)}
+  .cos .sym{background:var(--primary-soft);color:var(--primary)}
+  .tan .sym{background:var(--orange-soft);color:var(--orange)}
+
+  .flash-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:14px
+  }
+  .flash{
+    border-radius:18px;padding:18px;min-height:170px;display:flex;flex-direction:column;justify-content:space-between
+  }
+  .flash h3{margin:0 0 4px}.flash p{color:var(--muted);margin:0}
+  .flash.sin{background:var(--green-soft)}
+  .flash.cos{background:var(--primary-soft)}
+  .flash.tan{background:var(--orange-soft)}
+  .flash .big{font-size:1.15rem;font-weight:900}
+
+  .example{
+    background:#fcfcff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:14px
+  }
+  .step{display:flex; gap:12px; align-items:flex-start; margin:11px 0}
+  .num{
+    flex:0 0 28px;height:28px;border-radius:50%;background:var(--primary);
+    color:#fff;display:grid;place-items:center;font-weight:900
+  }
+
+  .quiz-question{font-size:1.15rem;font-weight:800;margin-bottom:15px}
+  .choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .choice{
+    border:1px solid var(--line);background:#fff;border-radius:13px;padding:12px;
+    text-align:left;font-size:1rem;cursor:pointer;font-weight:700;
+  }
+  .choice:hover{border-color:#9ea8ff;background:#fafaff}
+  .choice.correct{background:var(--green-soft);border-color:#7bd3b6;color:#087453}
+  .choice.wrong{background:var(--red-soft);border-color:#ef9da4;color:#a62a35}
+  .quiz-feedback{margin-top:13px;min-height:26px;font-weight:800}
+  .quiz-next{
+    margin-top:14px; border:0; border-radius:12px; padding:11px 16px;
+    background:var(--text); color:#fff; font-weight:800; cursor:pointer
+  }
+  .quiz-next:disabled{opacity:.35;cursor:not-allowed}
+  .score{float:right;color:var(--muted);font-size:.95rem}
+
+  details{
+    border:1px solid var(--line); border-radius:14px; background:#fff; padding:14px 16px
+  }
+  details + details{margin-top:10px}
+  summary{cursor:pointer;font-weight:800}
+
+  .footer{
+    max-width:1100px;margin:auto;padding:0 20px 45px;color:var(--muted);text-align:center
+  }
+
+  @media(max-width:850px){
+    .hero,.two,.simulator{grid-template-columns:1fr}
+    .three,.flash-grid{grid-template-columns:1fr}
+  }
+  @media(max-width:520px){
+    .choices{grid-template-columns:1fr}
+    main{padding-left:14px;padding-right:14px}
+    .nav-inner{padding-left:10px;padding-right:10px}
+    .card{padding:18px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hero">
+    <div>
+      <span class="eyebrow">중학교 3학년 · 수학</span>
+      <h1>삼각비,<br>그림으로 이해하면 쉬워!</h1>
+      <p>
+        “사인? 코사인? 탄젠트? 이름만 비슷해서 헷갈려…”
+        괜찮아. <b>기준각에 따라 어떤 변을 비교하는지</b>만 잡으면 된다.
+      </p>
+    </div>
+    <div class="hero-card">
+      <div><b>핵심 한 줄</b></div>
+      <div class="hero-equation">sin = 높이 ÷ 빗변 &nbsp; · &nbsp; cos = 밑변 ÷ 빗변 &nbsp; · &nbsp; tan = 높이 ÷ 밑변</div>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#basic">① 기본</a>
+    <a href="#sim">② 움직여 보기</a>
+    <a href="#memory">③ 암기 팁</a>
+    <a href="#example">④ 예제</a>
+    <a href="#quiz">⑤ 퀴즈</a>
+    <a href="#faq">⑥ 헷갈리는 것</a>
+  </div>
+</nav>
+
+<main>
+  <section id="basic">
+    <h2 class="section-title">1. 먼저, 직각삼각형부터</h2>
+    <p class="section-desc">삼각비는 “직각삼각형의 두 변의 길이를 비교한 비율”이야.</p>
+
+    <div class="grid three">
+      <div class="card">
+        <span class="pill blue">빗변</span>
+        <h3>가장 긴 변</h3>
+        <p>직각(90°)의 맞은편에 있는 변. 항상 직각삼각형에서 가장 길어.</p>
+      </div>
+      <div class="card">
+        <span class="pill green">높이</span>
+        <h3>기준각의 맞은편</h3>
+        <p>선택한 각을 기준으로 봤을 때 맞은편에 있는 변이야.</p>
+      </div>
+      <div class="card">
+        <span class="pill orange">밑변</span>
+        <h3>기준각에 붙은 변</h3>
+        <p>빗변이 아닌 두 변 중에서 기준각과 맞닿아 있는 변이야.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <h3 style="margin-top:0">삼각비 3형제</h3>
+      <div class="formula"><span style="color:var(--green)">sinθ</span> = <strong>높이</strong> / <strong>빗변</strong></div>
+      <div class="formula"><span style="color:var(--primary)">cosθ</span> = <strong>밑변</strong> / <strong>빗변</strong></div>
+      <div class="formula"><span style="color:var(--orange)">tanθ</span> = <strong>높이</strong> / <strong>밑변</strong></div>
+      <div class="memory">💡 제일 중요한 건 ‘θ(기준각)를 먼저 잡고’ 맞은편·옆·빗변을 구분하는 것!</div>
+    </div>
+  </section>
+
+  <section id="sim">
+    <h2 class="section-title">2. 각도를 움직여 보자</h2>
+    <p class="section-desc">아래 슬라이더를 움직이면 삼각형 모양과 세 삼각비가 동시에 바뀐다.</p>
+
+    <div class="card simulator">
+      <div class="svg-wrap">
+        <svg id="triangleSvg" viewBox="0 0 520 360" role="img" aria-label="직각삼각형 시뮬레이터">
+          <polygon id="triangle" points="" fill="#eef0ff" stroke="#4f46e5" stroke-width="4"/>
+          <line id="baseLine" x1="0" y1="0" x2="0" y2="0" stroke="#4f46e5" stroke-width="7" stroke-linecap="round"/>
+          <line id="heightLine" x1="0" y1="0" x2="0" y2="0" stroke="#0f9d72" stroke-width="7" stroke-linecap="round"/>
+          <line id="hypLine" x1="0" y1="0" x2="0" y2="0" stroke="#e68a00" stroke-width="7" stroke-linecap="round"/>
+          <path id="angleArc" d="" fill="none" stroke="#111827" stroke-width="3"/>
+          <text id="angleText" x="0" y="0" font-size="18" font-weight="800">θ</text>
+          <text id="baseText" x="0" y="0" font-size="16" font-weight="800" fill="#4f46e5">밑변</text>
+          <text id="heightText" x="0" y="0" font-size="16" font-weight="800" fill="#0f9d72">높이</text>
+          <text id="hypText" x="0" y="0" font-size="16" font-weight="800" fill="#d57600">빗변</text>
+          <rect id="rightMark" x="0" y="0" width="18" height="18" fill="none" stroke="#111827" stroke-width="2"/>
+        </svg>
+      </div>
+
+      <div class="controls">
+        <label for="angle">기준각 θ</label>
+        <input id="angle" type="range" min="10" max="80" value="40" step="1">
+        <div class="angle-bubble">
+          <div id="angleValue" class="angle-num">40</div><div class="angle-unit">°</div>
+        </div>
+
+        <div class="metric sin">
+          <div class="sym">sin</div>
+          <div class="content">
+            <b id="sinValue">0.643</b>
+            <span>높이 ÷ 빗변</span>
+          </div>
+        </div>
+        <div class="metric cos">
+          <div class="sym">cos</div>
+          <div class="content">
+            <b id="cosValue">0.766</b>
+            <span>밑변 ÷ 빗변</span>
+          </div>
+        </div>
+        <div class="metric tan">
+          <div class="sym">tan</div>
+          <div class="content">
+            <b id="tanValue">0.839</b>
+            <span>높이 ÷ 밑변</span>
+          </div>
+        </div>
+
+        <div class="memory" style="margin-top:16px">
+          🔍 관찰: 각도가 커질수록<br>
+          <span style="color:var(--green)">sin은 커지고</span>, <span style="color:var(--primary)">cos는 작아지며</span>,
+          <span style="color:var(--orange)">tan은 커진다.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="memory">
+    <h2 class="section-title">3. 세 개를 한 번에 기억하는 방법</h2>
+    <p class="section-desc">영어 이름을 억지로 외우기보다 “무엇 ÷ 무엇”으로 기억해 보자.</p>
+
+    <div class="flash-grid">
+      <div class="flash sin">
+        <div>
+          <h3>🟢 sin</h3>
+          <p>기준각에서 <b>맞은편</b>이 얼마나 긴가?</p>
+        </div>
+        <div class="big">높이 ÷ 빗변</div>
+      </div>
+      <div class="flash cos">
+        <div>
+          <h3>🔵 cos</h3>
+          <p>기준각에 붙은 <b>밑변</b>이 얼마나 긴가?</p>
+        </div>
+        <div class="big">밑변 ÷ 빗변</div>
+      </div>
+      <div class="flash tan">
+        <div>
+          <h3>🟠 tan</h3>
+          <p><b>맞은편과 옆</b>을 바로 비교하면?</p>
+        </div>
+        <div class="big">높이 ÷ 밑변</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <h3 style="margin-top:0">⭐ 시험에서 제일 먼저 할 일</h3>
+      <div class="step"><div class="num">1</div><div><b>기준각 표시</b> — 문제에서 주어진 각을 θ라고 생각한다.</div></div>
+      <div class="step"><div class="num">2</div><div><b>빗변 찾기</b> — 90°의 맞은편이다.</div></div>
+      <div class="step"><div class="num">3</div><div><b>나머지 두 변 이름 붙이기</b> — 기준각의 맞은편 = 높이, 붙어 있는 쪽 = 밑변.</div></div>
+      <div class="step"><div class="num">4</div><div><b>공식에 대입</b> — 무엇 ÷ 무엇인지 확인하고 계산한다.</div></div>
+    </div>
+  </section>
+
+  <section id="example">
+    <h2 class="section-title">4. 예제로 감 잡기</h2>
+    <p class="section-desc">공식 → 숫자 대입 → 계산 순서로 천천히 해보자.</p>
+
+    <div class="grid two">
+      <div class="card">
+        <span class="pill green">예제 1 · sin</span>
+        <div class="example">
+          <b>높이 = 6, 빗변 = 10일 때 sinθ는?</b>
+          <div class="step"><div class="num">1</div><div>sinθ = 높이 ÷ 빗변</div></div>
+          <div class="step"><div class="num">2</div><div>sinθ = 6 ÷ 10</div></div>
+          <div class="step"><div class="num">3</div><div><b>sinθ = 0.6</b></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="pill orange">예제 2 · tan</span>
+        <div class="example">
+          <b>높이 = 4, 밑변 = 3일 때 tanθ는?</b>
+          <div class="step"><div class="num">1</div><div>tanθ = 높이 ÷ 밑변</div></div>
+          <div class="step"><div class="num">2</div><div>tanθ = 4 ÷ 3</div></div>
+          <div class="step"><div class="num">3</div><div><b>tanθ ≈ 1.33</b></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <span class="pill blue">주의</span>
+      <h3>sin, cos, tan은 “변의 길이” 그 자체가 아니다.</h3>
+      <p>
+        예를 들어 sinθ = 0.6이라는 말은 “높이가 0.6”이라는 뜻이 아니라
+        <b>높이가 빗변의 0.6배 정도</b>라는 뜻이다.
+      </p>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <h2 class="section-title">5. 30초 미니 퀴즈</h2>
+    <p class="section-desc">한 문제씩 풀면서 바로 확인해 보자. 틀려도 괜찮아!</p>
+
+    <div class="card">
+      <div class="score">점수: <b id="score">0</b> / <b id="total">0</b></div>
+      <div class="quiz-question" id="question">문제를 불러오는 중…</div>
+      <div class="choices" id="choices"></div>
+      <div class="quiz-feedback" id="feedback" aria-live="polite"></div>
+      <button class="quiz-next" id="nextBtn" disabled>다음 문제 →</button>
+    </div>
+  </section>
+
+  <section id="faq">
+    <h2 class="section-title">6. 많이 헷갈리는 것</h2>
+    <p class="section-desc">헷갈릴 때는 아래 문장을 다시 확인하면 된다.</p>
+
+    <details>
+      <summary>“빗변은 무조건 제일 긴 변인가요?”</summary>
+      <p>네. 직각삼각형에서는 90°의 맞은편 변이 빗변이고, 항상 가장 길다.</p>
+    </details>
+    <details>
+      <summary>“높이와 밑변은 항상 같은 변인가요?”</summary>
+      <p>아니야. <b>어느 각을 기준으로 보느냐</b>에 따라 높이와 밑변의 역할이 달라질 수 있다.</p>
+    </details>
+    <details>
+      <summary>“tan은 왜 빗변이 없어요?”</summary>
+      <p>tan은 높이와 밑변을 바로 비교하기 때문에 높이 ÷ 밑변으로 쓴다.</p>
+    </details>
+    <details>
+      <summary>“계산기에 sin 30을 넣었는데 이상한 값이 나와요.”</summary>
+      <p>각도 문제라면 계산기가 <b>도(degree, DEG)</b> 모드인지 확인하자.</p>
+    </details>
+  </section>
+</main>
+
+<div class="footer">
+  중3 삼각비 학습 사이트 · 핵심은 “기준각 → 변 구분 → 공식 → 대입” ✨
+</div>
+
+<script>
+  const angleInput = document.getElementById('angle');
+  const angleValue = document.getElementById('angleValue');
+  const sinValue = document.getElementById('sinValue');
+  const cosValue = document.getElementById('cosValue');
+  const tanValue = document.getElementById('tanValue');
+
+  const triangle = document.getElementById('triangle');
+  const baseLine = document.getElementById('baseLine');
+  const heightLine = document.getElementById('heightLine');
+  const hypLine = document.getElementById('hypLine');
+  const angleArc = document.getElementById('angleArc');
+  const angleText = document.getElementById('angleText');
+  const baseText = document.getElementById('baseText');
+  const heightText = document.getElementById('heightText');
+  const hypText = document.getElementById('hypText');
+  const rightMark = document.getElementById('rightMark');
+
+  function updateTriangle(){
+    const deg = Number(angleInput.value);
+    const rad = deg * Math.PI / 180;
+    const scale = 210;
+    const left = 105;
+    const bottom = 305;
+    const vertical = 70;
+    const base = scale * Math.cos(rad);
+    const height = scale * Math.sin(rad);
+
+    const xRight = left + base;
+    const yTop = bottom - height;
+
+    triangle.setAttribute('points', `${left},${bottom} ${xRight},${bottom} ${left},${yTop}`);
+    baseLine.setAttribute('x1', left); baseLine.setAttribute('y1', bottom);
+    baseLine.setAttribute('x2', xRight); baseLine.setAttribute('y2', bottom);
+    heightLine.setAttribute('x1', left); heightLine.setAttribute('y1', bottom);
+    heightLine.setAttribute('x2', left); heightLine.setAttribute('y2', yTop);
+    hypLine.setAttribute('x1', left); hypLine.setAttribute('y1', yTop);
+    hypLine.setAttribute('x2', xRight); hypLine.setAttribute('y2', bottom);
+
+    const arcR = 42;
+    const ax = left + arcR;
+    const ay = bottom;
+    const bx = left + arcR * Math.cos(rad);
+    const by = bottom - arcR * Math.sin(rad);
+    angleArc.setAttribute('d', `M ${ax} ${ay} A ${arcR} ${arcR} 0 0 0 ${bx} ${by}`);
+    angleText.setAttribute('x', left + 51);
+    angleText.setAttribute('y', bottom - 7);
+
+    baseText.setAttribute('x', left + base/2 - 22);
+    baseText.setAttribute('y', bottom + 27);
+    heightText.setAttribute('x', left - 68);
+    heightText.setAttribute('y', bottom - height/2);
+    hypText.setAttribute('x', left + base/2 + 12);
+    hypText.setAttribute('y', bottom - height/2 - 10);
+
+    rightMark.setAttribute('x', left);
+    rightMark.setAttribute('y', bottom - 18);
+
+    const s = Math.sin(rad), c = Math.cos(rad), t = Math.tan(rad);
+    angleValue.textContent = deg;
+    sinValue.textContent = s.toFixed(3);
+    cosValue.textContent = c.toFixed(3);
+    tanValue.textContent = t.toFixed(3);
+  }
+
+  angleInput.addEventListener('input', updateTriangle);
+  updateTriangle();
+
+  // Quiz
+  const quiz = [
+    {
+      q:"기준각 θ를 기준으로 맞은편 변이 6, 빗변이 10이라면 sinθ는?",
+      a:["0.4","0.6","1.6","6"],
+      c:1,
+      explain:"sinθ = 높이 ÷ 빗변 = 6 ÷ 10 = 0.6"
+    },
+    {
+      q:"tanθ의 올바른 식은?",
+      a:["밑변 ÷ 빗변","빗변 ÷ 높이","높이 ÷ 밑변","높이 ÷ 빗변"],
+      c:2,
+      explain:"tanθ = 높이 ÷ 밑변"
+    },
+    {
+      q:"직각의 맞은편에 있는 변은 무엇일까?",
+      a:["높이","밑변","빗변","각변"],
+      c:2,
+      explain:"직각(90°)의 맞은편이 빗변이다."
+    },
+    {
+      q:"cosθ = 0.8이라는 것은 무엇을 뜻할까?",
+      a:["밑변/빗변 = 0.8","높이/밑변 = 0.8","빗변/밑변 = 0.8","높이/빗변 = 0.8"],
+      c:0,
+      explain:"cosθ = 밑변 ÷ 빗변"
+    },
+    {
+      q:"계산기에 30°의 sin값을 구할 때 확인할 것은?",
+      a:["라디안(RAD) 모드","도(DEG) 모드","소수점 고정","음수 모드"],
+      c:1,
+      explain:"중등 삼각비 각도 계산에서는 보통 도(degree) 모드를 사용한다."
+    }
+  ];
+
+  let qIndex = 0;
+  let score = 0;
+  let answered = false;
+
+  const question = document.getElementById('question');
+  const choices = document.getElementById('choices');
+  const feedback = document.getElementById('feedback');
+  const nextBtn = document.getElementById('nextBtn');
+  const scoreEl = document.getElementById('score');
+  const totalEl = document.getElementById('total');
+
+  function renderQuestion(){
+    answered = false;
+    nextBtn.disabled = true;
+    feedback.textContent = "";
+    const item = quiz[qIndex];
+    question.textContent = item.q;
+    choices.innerHTML = "";
+    item.a.forEach((text, i)=>{
+      const btn = document.createElement('button');
+      btn.className = "choice";
+      btn.type = "button";
+      btn.textContent = `${String.fromCharCode(9312+i)} ${text}`;
+      btn.addEventListener('click', ()=>answer(i));
+      choices.appendChild(btn);
+    });
+    totalEl.textContent = qIndex;
+    scoreEl.textContent = score;
+  }
+
+  function answer(i){
+    if(answered) return;
+    answered = true;
+    const item = quiz[qIndex];
+    [...choices.children].forEach((btn, idx)=>{
+      btn.disabled = true;
+      if(idx === item.c) btn.classList.add("correct");
+      if(idx === i && i !== item.c) btn.classList.add("wrong");
+    });
+    if(i === item.c){
+      score++;
+      feedback.textContent = "✅ 정답! " + item.explain;
+    }else{
+      feedback.textContent = "💡 아쉬워! " + item.explain;
+    }
+    scoreEl.textContent = score;
+    totalEl.textContent = qIndex + 1;
+    nextBtn.disabled = false;
+    nextBtn.textContent = qIndex === quiz.length - 1 ? "결과 보기 →" : "다음 문제 →";
+  }
+
+  nextBtn.addEventListener('click', ()=>{
+    if(!answered) return;
+    if(qIndex === quiz.length - 1){
+      question.textContent = `🎉 퀴즈 완료! ${quiz.length}문제 중 ${score}문제를 맞혔어.`;
+      choices.innerHTML = "";
+      feedback.textContent = score === quiz.length
+        ? "완벽해! 이제 문제에서 기준각과 세 변부터 차근차근 표시해 보자."
+        : "틀린 문제는 ‘기준각 → 변 구분 → 공식’ 순서로 다시 보면 훨씬 쉬워져.";
+      nextBtn.textContent = "다시 풀기 ↻";
+      nextBtn.onclick = ()=>location.reload();
+      return;
+    }
+    qIndex++;
+    renderQuestion();
+  });
+
+  renderQuestion();
+</script>
+</body>
+</html>
